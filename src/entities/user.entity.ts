@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToOne, PrimaryColumn, EntityManager, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToOne, PrimaryColumn, EntityManager, JoinColumn, OneToMany } from 'typeorm';
 import { UserRole } from './user-role.entity';
 import { Permission } from 'src/enums/permission.enum';
 import { QueryHelper } from 'src/db/query-helper';
@@ -9,11 +9,11 @@ export class User extends BaseEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column({name: 'firstname'})
-  firstName: string;
+  @Column()
+  first_name: string;
 
-  @Column({name: 'lastname'})
-  lastName: string;
+  @Column()
+  last_name: string;
 
   @Column()
   email: string;
@@ -21,25 +21,25 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Column({name: 'passwordhash'})
-  passwordHash: string;
+  @Column()
+  password_hash: string;
 
-  @Column({name: 'roleid'})
-  roleId: number;
+  @Column()
+  role_id: number;
 
-  @CreateDateColumn({name: 'createdon'})
-  createdOn: Date;
+  @CreateDateColumn()
+  created_on: Date;
 
-  @UpdateDateColumn({name: 'updatedon'})
-  updatedOn: Date;
+  @UpdateDateColumn()
+  updated_on: Date;
 
-  @Column({ default: true, name: 'isactive' })
-  isActive: boolean;
+  @Column()
+  is_active: boolean;
 
-  @Column({name: 'storagespace'})
-  storageSpace: number; // allowed storage space in MB
+  @Column()
+  storage_space: number; // allowed storage space in MB
 
-  @Column({name: 'usedspace'})
+  @Column()
   used_space: number; // used space in bytes
 
   @ManyToOne(() => UserRole)
@@ -47,14 +47,14 @@ export class User extends BaseEntity {
     name: 'roleid',
     referencedColumnName: 'id'
   })
-  userRole: Promise<UserRole>;
+  user_role: Promise<UserRole>;
 
   @OneToMany(() => AuthToken, (authToken) => authToken.user)
-  authtokens: Promise<AuthToken[]>
+  auth_tokens: Promise<AuthToken[]>
 
   async hasPermission(permission: Permission): Promise<boolean> {
-    const role = await this.userRole;
-    const permissionBit = role.permissionMask.charAt(role.permissionMask.length - 1 - (permission - 1));
+    const role = await this.user_role;
+    const permissionBit = role.permission_mask.charAt(role.permission_mask.length - 1 - (permission - 1));
 
     return Boolean(Number(permissionBit));
   }
@@ -73,7 +73,7 @@ export class User extends BaseEntity {
     );
 
     const necessarySpace = Number(storageInfo[0]['used_space']) + fileSize;
-    const allowedStorageSpace = Number(this.storageSpace[0]['allowed_space']);
+    const allowedStorageSpace = Number(this.storage_space[0]['allowed_space']);
     return necessarySpace < allowedStorageSpace;
   }
 }

@@ -17,8 +17,8 @@ export class CardService {
   async getOneBad(id: number): Promise<CardResult> {
     const card = await Card.findOne({
       where: {
-        idNumber: id,
-        isDeleted: false
+        id_number: id,
+        is_deleted: false
       }
     });
 

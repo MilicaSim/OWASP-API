@@ -6,17 +6,17 @@ export class AuthToken extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({name: 'userid'})
-  userId: string;
+  @Column()
+  user_id: string;
 
   @Column()
   token: string;
 
-  @Column({name: 'issuedon'})
-  issuedOn: Date;
+  @Column()
+  issued_on: Date;
 
-  @Column({name: 'expdate'})
-  expDate: Date;
+  @Column()
+  exp_date: Date;
 
   @ManyToOne(() => User)
   user: User
@@ -25,9 +25,9 @@ export class AuthToken extends BaseEntity {
     return AuthToken.findOne({
       where: {
         token: token,
-        expDate: MoreThan(new Date()) // non expired
+        exp_date: MoreThan(new Date()) // non expired
       },
-      relations: ['user', 'user.userRole']
+      relations: ['user', 'user.user_role']
     })
   }
 }

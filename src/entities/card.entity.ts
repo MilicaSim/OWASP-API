@@ -6,14 +6,14 @@ export class Card extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({name: 'idnumber'})
-  idNumber: number;
+  @Column()
+  id_number: number;
 
   @Column()
   name: string;
 
-  @Column({name: 'createdbyid'})
-  createdById: string;
+  @Column()
+  created_by_id: string;
 
   @Column()
   cvc: number;
@@ -22,19 +22,19 @@ export class Card extends BaseEntity {
   number: string;
 
   @Column()
-  expDate: Date;
+  exp_date: Date;
 
-  @CreateDateColumn({name: 'createdon'})
-  createdOn: Date;
+  @CreateDateColumn()
+  created_on: Date;
 
-  @UpdateDateColumn({name: 'updatedon'})
-  updatedOn: Date;
+  @UpdateDateColumn()
+  updated_on: Date;
 
-  @Column({ default: true, name: 'isactive' })
-  isActive: boolean;
+  @Column()
+  is_active: boolean;
 
-  @Column({ default: false, name: 'isdeleted' })
-  isDeleted: boolean;
+  @Column()
+  is_deleted: boolean;
 
   /**
    * Checks whether provided user has the access to provided card

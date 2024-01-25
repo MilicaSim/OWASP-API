@@ -15,7 +15,7 @@ export class AuthService {
   async getUserByToken(token: string): Promise<User> {
 
     const validAuthToken = await AuthToken.getValidToken(token);
-    if (!validAuthToken || !validAuthToken.user || !validAuthToken.user.isActive)
+    if (!validAuthToken || !validAuthToken.user || !validAuthToken.user.is_active)
       return null;
 
     return validAuthToken.user;

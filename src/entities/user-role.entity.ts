@@ -9,12 +9,12 @@ export class UserRole extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({name: 'permissionmask'})
-  permissionMask: string;
+  @Column()
+  permission_mask: string;
 
   @Column()
   description: string;
 
-  @OneToMany(() => User, (user) => user.userRole)
+  @OneToMany(() => User, (user) => user.user_role)
   users: Promise<User[]>
 }
