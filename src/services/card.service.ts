@@ -41,10 +41,10 @@ export class CardService {
   async getOneGood(id: number, userId: string): Promise<CardResult> {
     const card = await this.entityManager.createQueryBuilder(Card, 'c')
       .where({
-        idNumber: id,
-        isDeleted: false
+        id_number: id,
+        is_deleted: false
       })
-      .appendCardFilter('idNumber', userId) // get only one that the logged in user can see (access is allowed)
+      .appendCardFilter('id_number', userId) // get only one that the logged in user can see (access is allowed)
       .getOne();
 
     if (!card)
