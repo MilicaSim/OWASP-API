@@ -142,6 +142,7 @@ export class ProductController {
         return false;
       return true;
     } catch (error) {
+      console.log(`Error in function 'isValidUrl': ${error.message}`)
       return false;
     }
   }

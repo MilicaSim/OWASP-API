@@ -1,0 +1,312 @@
+{
+	"info": {
+		"_postman_id": "abc46694-463a-4370-97db-695018d4701f",
+		"name": "Master - OWASP TOP 10",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10850011"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"FirstName\",\n    \"lastName\": \"LastName\",\n    \"email\": \"email@email.com\",\n    \"password\": \"password\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/user/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Card",
+			"item": [
+				{
+					"name": "Get One - Bad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-token",
+								"value": "{{api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/card/1/bad",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"card",
+								"1",
+								"bad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One - Good",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-token",
+								"value": "{{api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/car/1/good",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"car",
+								"1",
+								"good"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-token",
+								"value": "{{api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/product",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Correct",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-token",
+								"value": "{{api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/product/correct",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product",
+								"correct"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": true\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/product/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Availability",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/milicasimeunovic/Desktop/Screenshot 2023-06-13 at 22.26.53.png"
+								},
+								{
+									"key": "id",
+									"value": "36ccc8c3-60e8-4082-8f1c-5e1931b0f401",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/product/upload-image",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/milicasimeunovic/Desktop/Screenshot 2023-06-13 at 22.26.53.png"
+								},
+								{
+									"key": "id",
+									"value": "36ccc8c3-60e8-4082-8f1c-5e1931b0f401",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/product/upload-image",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Image From URL",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"imageUrl\": \"https://localhost:3000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/product/upload-image-from-url",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product",
+								"upload-image-from-url"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

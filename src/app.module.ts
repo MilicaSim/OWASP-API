@@ -12,14 +12,19 @@ import { CardService } from './services/card.service';
 import { UserController } from './controllers/user.contoller';
 import { ProductController } from './controllers/product.controller';
 import { CardController } from './controllers/card.controller';
-import { TokenGuard } from './auth/guards/token.guard';
+// import { TokenGuard } from './auth/guards/token.guard';
 import { APP_GUARD } from '@nestjs/core';
-// import { PermissionGuard } from './auth/guards/permission.guard';
+import { PermissionGuard } from './auth/guards/permission.guard';
 import { AuthService } from './services/auth.service';
-import { AuthController } from './controllers/auth.controller';
-import { AuthToken } from './entities/auth-token.entity';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './auth/strategies/local.strategy';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { LocalAuthGuard } from './auth/guards/local-auth.guard';
+import { LoginController } from './controllers/login.controller';
 
 @Module({
   imports: [
@@ -37,8 +42,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      // entities: [ Card, Product, AuthToken, User, UserRole],
-      entities: [Product],
+      entities: [ Card, Product, User, UserRole],
+      // entities: [Product],
       synchronize: false,
       keepConnectionAlive: true,
       autoLoadEntities: true,
@@ -46,21 +51,36 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       logging: false,
       poolSize: 20
     }),
+    PassportModule,
+    JwtModule.register({
+      secret: 'd6a47cb9290980515daee4be1954989e7d65da451603838079fcccb67e3dcdc6',
+      signOptions: { expiresIn: '15m' },
+    }),
   ],
-  controllers: [UserController, ProductController, CardController, AuthController],
+  controllers: [LoginController, UserController, ProductController, CardController],
   providers: [
   // {
   //   provide: APP_GUARD,
   //   useClass: TokenGuard
   // },
+  // LocalStrategy,
+  JwtStrategy,
+  {
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard,
+  },
   // {
   //   provide: APP_GUARD,
-  //   useClass: PermissionGuard
+  //   useClass: LocalAuthGuard,
   // },
-  // {
-  //   provide: APP_GUARD,
-  //   useClass: ThrottlerGuard
-  // },
+  {
+    provide: APP_GUARD,
+    useClass: PermissionGuard
+  },
+  {
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard
+  },
   UserService, ProductService, CardService, AuthService
 ]
 })

@@ -34,10 +34,6 @@ ALTER TABLE "user"
 ADD COLUMN role_id int2,
 ADD FOREIGN KEY(role_id) REFERENCES "user_role"(id);
 
--- assign existing users to user_role
-UPDATE TABLE "user"
-SET role_id = 5;
-
 -- make role_id mandatory
 ALTER TABLE "user"
 ALTER COLUMN role_id SET NOT NULL; 
@@ -50,16 +46,16 @@ INSERT INTO "user" (id, first_name, last_name, email, password, password_hash, r
 INSERT INTO "user" (id, first_name, last_name, email, password, password_hash, role_id) VALUES ('331cbde4-66c6-41a6-8825-3a47d36f3828', 'User3', 'Regular', 'user3@gmail.com', 'password', '', 5);
 INSERT INTO "user" (id, first_name, last_name, email, password, password_hash, role_id) VALUES ('49fb0b3f-f25d-4540-b84c-f366a8b0cc9e', 'User4', 'Regular', 'user4@gmail.com', 'password', '', 5);
 
--- create table AUTH_TOKEN
-CREATE TABLE "auth_token"(
-	id uuid NOT NULL DEFAULT uuid_generate_v4(),
-	user_id uuid NOT NULL,
-	token TEXT NOT NULL,
-	exp_date TIMESTAMPTZ DEFAULT NOW() + '1 hour'::interval,
-	issued_on TIMESTAMPTZ DEFAULT NOW(),
-	PRIMARY KEY(id),
-	FOREIGN KEY(user_id) REFERENCES "user"(id)
-);
+-- -- create table AUTH_TOKEN
+-- CREATE TABLE "auth_token"(
+-- 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+-- 	user_id uuid NOT NULL,
+-- 	token TEXT NOT NULL,
+-- 	exp_date TIMESTAMPTZ DEFAULT NOW() + '1 hour'::interval,
+-- 	issued_on TIMESTAMPTZ DEFAULT NOW(),
+-- 	PRIMARY KEY(id),
+-- 	FOREIGN KEY(user_id) REFERENCES "user"(id)
+-- );
 
 -- create table CARD
 CREATE TABLE "card"(
@@ -104,7 +100,7 @@ INSERT INTO "product" (id, id_number, created_by_id, image, name, description, p
 
 -- db functions
 CREATE OR REPLACE FUNCTION "get_user_allowed_card_ids"(userId uuid)
-	RETURNS TABLE("id" int4) AS BODY$
+	RETURNS TABLE("id" int4) AS $BODY$
 
 	SELECT id_number
 	FROM card
@@ -116,7 +112,7 @@ LANGUAGE sql VOLATILE;
 
 
 CREATE OR REPLACE FUNCTION "get_storage_space_info"(userId uuid)
-	RETURNS TABLE("used_space" bigint, "allowed_space" bigint) AS BODY$
+	RETURNS TABLE("used_space" bigint, "allowed_space" bigint) AS $BODY$
 
 	SELECT u.used_space -- in bytes
 		, u.storage_space::BIGINT * 1024 * 1024 AS allowed_space -- convert from MB to bytes

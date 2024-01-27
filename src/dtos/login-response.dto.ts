@@ -1,6 +1,9 @@
 export class LoginResponse {
-  name: string;
-  number: string;
-  cvc: number
+  accessToken: string;
+  userId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  permissioins: string;
 }
   

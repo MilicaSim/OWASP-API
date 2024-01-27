@@ -2,7 +2,7 @@ import { Entity, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToO
 import { UserRole } from './user-role.entity';
 import { Permission } from 'src/enums/permission.enum';
 import { QueryHelper } from 'src/db/query-helper';
-import { AuthToken } from './auth-token.entity';
+// import { AuthToken } from './auth-token.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -49,8 +49,8 @@ export class User extends BaseEntity {
   })
   user_role: Promise<UserRole>;
 
-  @OneToMany(() => AuthToken, (authToken) => authToken.user)
-  auth_tokens: Promise<AuthToken[]>
+  // @OneToMany(() => AuthToken, (authToken) => authToken.user)
+  // auth_tokens: Promise<AuthToken[]>
 
   async hasPermission(permission: Permission): Promise<boolean> {
     const role = await this.user_role;
