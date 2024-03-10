@@ -3,7 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "src/decorators/is-public.decorator";
 import { User } from "src/entities/user.entity";
-import { AuthService } from "src/services/auth.service";
+import { AuthService } from "../auth.service";
 
 @Injectable()
 export class TokenGuard implements CanActivate {
@@ -26,13 +26,13 @@ export class TokenGuard implements CanActivate {
     const token = <string>request.headers['api-token'];
     
     let user: User;
-    if (token)
-      user = await this.authService.getUserByToken(token);
+    // if (token)
+      // user = await this.authService.getUserByToken(token);
 
     if (!user)
       throw new UnauthorizedException();
     
-    // request.user = user;
+    request.user = user;
     return true;
   }
 }

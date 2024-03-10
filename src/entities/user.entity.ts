@@ -44,7 +44,7 @@ export class User extends BaseEntity {
 
   @ManyToOne(() => UserRole)
   @JoinColumn({
-    name: 'roleid',
+    name: 'role_id',
     referencedColumnName: 'id'
   })
   user_role: Promise<UserRole>;

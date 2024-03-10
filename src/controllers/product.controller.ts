@@ -129,6 +129,13 @@ export class ProductController {
     });
   }
 
+  @Post('buy')
+  async buyProduct(
+    @Body() data: ProductAvailabilityDto
+  ) {
+    return this.productService.buy(data.id, data.id);
+  }
+
   /**
    * Checks if the provided url is valid
    * @param url Url

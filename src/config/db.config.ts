@@ -1,8 +1,9 @@
 export default () => ({
-  database: {
+  db: {
     host: 'localhost',
     port: 5432,
     database: 'postgres',
+    username: 'postgres',
     password: 'postgres'
   }
 });

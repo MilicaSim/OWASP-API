@@ -1,16 +1,18 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductResult } from 'src/dtos/product-result.dto';
 import { Product } from 'src/entities/product.entity';
 import { EntityManager } from 'typeorm';
 import * as fs from 'fs';
 import * as pth from 'path';
 import { User } from 'src/entities/user.entity';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ProductService {
   private readonly storagePath = '/var/data/images/products/';
   constructor(
-    private entityManager: EntityManager
+    private entityManager: EntityManager,
+    private readonly httpService: HttpService
   ){}
 
   async getAll(): Promise<Product[]> {
@@ -55,6 +57,40 @@ export class ProductService {
 
     product.is_active = isActive;
     await product.save();
+  }
+
+
+  /**
+   * Buy product
+   * @param productId Product id
+   * @param cardId Card id
+   */
+  async buy(productId: string, cardId: string): Promise<void> {
+    const product = await Product.findOne({
+      where: {
+        id: productId,
+        is_active: true
+      }
+    });
+
+    if (!product)
+      throw new NotFoundException(`Product with provided id does not exist`);
+
+    // validate card
+    const cardInfo = await this.httpService.get(`http://localhost:3001/card/${cardId}`);
+    if (!cardInfo)
+      throw new NotFoundException(`Card with provided id does not exist`);
+
+    // buy product
+    try {
+      const result = await this.httpService.post('http://localhost:3001/card', {
+        card_number: cardInfo['cardNumber'],
+        amount: product.price
+      });
+    } catch (error: any) {
+      console.log(`Error: ${error.message}`);
+      throw error;
+    }
   }
 
   /**

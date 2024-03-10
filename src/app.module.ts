@@ -1,87 +1,72 @@
 import { Module } from '@nestjs/common';
-import db from './config/db.config';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { UserRole } from './entities/user-role.entity';
-import { Card } from './entities/card.entity';
-import { Product } from './entities/product.entity';
-import { UserService } from './services/user.service';
-import { ProductService } from './services/product.service';
-import { CardService } from './services/card.service';
 import { UserController } from './controllers/user.contoller';
 import { ProductController } from './controllers/product.controller';
 import { CardController } from './controllers/card.controller';
-// import { TokenGuard } from './auth/guards/token.guard';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, RouterModule, Routes } from '@nestjs/core';
 import { PermissionGuard } from './auth/guards/permission.guard';
-import { AuthService } from './services/auth.service';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './auth/strategies/local.strategy';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { LoginController } from './controllers/login.controller';
+import { ControllersModule } from './controllers/controllers.module';
+import * as path from 'path';
 
+// config
+import dbConfig from './config/db.config';
+import authConfig from './config/auth.config'
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { TokenGuard } from './auth/guards/token.guard';
+import { AuthModule } from './auth/auth.module';
+import { ServicesModule } from './services/services.module';
+
+const routes: Routes = [
+  {
+    path: '/api/v1',
+    module: ControllersModule
+  }
+]
 @Module({
   imports: [
+    ControllersModule,
+    AuthModule,
+    ServicesModule,
+    RouterModule.register(routes),
     ConfigModule.forRoot({
-      load: [db],
+      isGlobal: true,
+      cache: true,
+      load: [dbConfig, authConfig],
     }),
-    ThrottlerModule.forRoot([{
+    ServeStaticModule.forRoot({
+      serveStaticOptions: {
+        fallthrough: false,
+        index: false
+      },
+      rootPath: require.main.path + path.sep + 'public',
+      exclude: ['/api/*'],
+    }),
+    ThrottlerModule.forRoot([{ // This module protects app from brute-force attak
       ttl: 60000,
       limit: 10,
-    }]),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
-      entities: [ Card, Product, User, UserRole],
-      // entities: [Product],
-      synchronize: false,
-      keepConnectionAlive: true,
-      autoLoadEntities: true,
-      namingStrategy: new SnakeNamingStrategy(),
-      logging: false,
-      poolSize: 20
-    }),
-    PassportModule,
-    JwtModule.register({
-      secret: 'd6a47cb9290980515daee4be1954989e7d65da451603838079fcccb67e3dcdc6',
-      signOptions: { expiresIn: '15m' },
-    }),
+    }])
   ],
   controllers: [LoginController, UserController, ProductController, CardController],
   providers: [
-  // {
-  //   provide: APP_GUARD,
-  //   useClass: TokenGuard
-  // },
-  // LocalStrategy,
-  JwtStrategy,
-  {
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard,
-  },
-  // {
-  //   provide: APP_GUARD,
-  //   useClass: LocalAuthGuard,
-  // },
-  {
-    provide: APP_GUARD,
-    useClass: PermissionGuard
-  },
-  {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard
-  },
-  UserService, ProductService, CardService, AuthService
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: TokenGuard,
+    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    },
 ]
 })
 export class AppModule {}
